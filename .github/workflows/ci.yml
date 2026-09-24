@@ -1,0 +1,31 @@
+name: ci.yml
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout repository
+        uses: actions/checkout@v4
+
+      - name: install uv
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+
+      - name: set up python
+        run: uv python install 3.14
+
+      - name: install dependencies
+        run: uv sync --locked
+
+      - name: lint
+        run: uv run ruff check .
+
+      - name: run tests
+        run: uv run pytest
+
+
